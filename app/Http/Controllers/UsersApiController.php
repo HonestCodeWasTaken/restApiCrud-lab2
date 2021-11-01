@@ -8,8 +8,10 @@ class UsersApiController extends Controller
 {
     public function index()
     {
+        //$paginatedUsers = users::paginate(2);
         return users::all();
     }
+
 
     public function store()
     {
@@ -49,5 +51,10 @@ class UsersApiController extends Controller
         return [
             'success' => $success,
         ];
+    }
+    public function getWithID(users $user){
+        // return messages::where('id', $message)->firstOrFail();
+        return users::query('id', $user)->firstOrFail();
+        
     }
 }
