@@ -12,7 +12,7 @@ export default class UsersSVC {
             console.log(error);
           });
     }
-    public static fetchUsers = async (url:string) => {
+    public static fetchUrl = async (url:string) => {
         return fetch(url).then(r => r.json())
     }
 }
