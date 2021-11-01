@@ -50,4 +50,9 @@ class MessagesApiController extends Controller
             'success' => $success,
         ];
     }
+    public function getWithID(messages $message){
+        // return messages::where('id', $message)->firstOrFail();
+        
+        return messages::query('id', $message)->firstOrFail();
+    }
 }
