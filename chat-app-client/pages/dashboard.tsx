@@ -22,6 +22,7 @@ const Dashboard = () => {
 	const [message, setMessage] = useState("");
 	const [letterCount, setLetterCount] = useState(0);
 	const [users, setUsers] = useState<Array<IUser>>([])
+	const [currentUsername, setCurrentUsername] = useState<string | undefined>("")
 	const [messages, setMessages] = useState<IMessage>({"status": "NOT INITIALIZED",
   "messages": []})
 
@@ -39,6 +40,10 @@ const Dashboard = () => {
 	const getUsers = async () => {
 		let users: Array<IUser> = await UsersSVC.fetchUrl(`${restApi}/users`)
 		setUsers(users)
+		let urlParams = new URLSearchParams(window.location.search)
+		const whoIsSendingID: any = urlParams.get('ID')
+		let username = users.find(x => x.id === parseInt(whoIsSendingID))?.username
+		setCurrentUsername(username)
 	}
 	const sendMessageToUser = async () => {
 		let urlParams = new URLSearchParams(window.location.search)
@@ -74,13 +79,15 @@ const Dashboard = () => {
 		let messages: IMessage = await UsersSVC.fetchUrl(`${restApi}/messages`)
 		setMessages(messages)
 	}
+
 	useEffect(() => {
 		getUsers();
 		getMessages();
+
 	}, []);
 	return (
 		<div>
-			<Sidebar seeMessageSend={setViewSendMessage} seeDashBoard={setViewDashboard} seeMessages={setViewMessages} view={view} />
+			<Sidebar seeMessageSend={setViewSendMessage} seeDashBoard={setViewDashboard} seeMessages={setViewMessages} view={view} currentUsername={currentUsername} />
 			{view === "ViewDashboard" ? <DashboardC formBackground={formBackground}/> : null}
 			{view === "SendMessage" ? <Flex
 			 pos="absolute"
