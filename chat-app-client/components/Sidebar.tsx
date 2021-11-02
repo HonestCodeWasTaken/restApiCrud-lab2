@@ -11,18 +11,14 @@ import {
 import {
     FiMenu,
     FiHome,
-    FiCalendar,
-    FiUser,
-    FiDollarSign,
-    FiBriefcase,
-    FiSettings,
     FiMessageCircle,
     FiMessageSquare
 } from 'react-icons/fi'
 import { IoPawOutline } from 'react-icons/io5'
 import NavItem from '../components/NavItem'
+import { INavBarProps } from '../interfaces/INavBarProps'
 
-export default function Sidebar() {
+export const Sidebar: React.FC<INavBarProps> = (seeMessages, see) => {
     const [navSize, changeNavSize] = useState("large")
     return (
         <Flex
@@ -56,7 +52,7 @@ export default function Sidebar() {
                             changeNavSize("small")
                     }}
                 />
-                <NavItem navSize={navSize} icon={FiHome} title="Dashboard" description="This is the description for the dashboard." active={undefined} />
+                <NavItem navSize={navSize} icon={FiHome} title="Dashboard" description="This is the description for the dashboard." active={undefined}  />
                 <NavItem navSize={navSize} icon={FiMessageCircle} title="Send a message" active description={undefined} />
                 <NavItem navSize={navSize} icon={FiMessageSquare} title="Messages" description={undefined} active={undefined} />
             </Flex>

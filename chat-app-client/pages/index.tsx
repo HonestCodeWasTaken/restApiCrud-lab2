@@ -35,7 +35,8 @@ const Home: NextPage = () => {
    const checkIfLoginExists = async () => {
       setLoading(true);
       let users: Array<IUser> = await UsersSVC.fetchUrl(`${restApi}/users`)
-      const exists: boolean = users.some(x => x.email === email && x.username === username)
+      const user: IUser | undefined = users.find(x => x.email === email && x.username === username)
+      const exists: boolean = user !== null && user !== undefined 
       setTimeout(() => { console.log("World!"); }, 2000);
       setLoading(false);
       if (exists === false) {
@@ -45,7 +46,7 @@ const Home: NextPage = () => {
          })
       }
       else {
-         window.location.href = "/haha"
+         window.location.href = `/dashboard?ID=${user?.id}`
       }
    }
    return (

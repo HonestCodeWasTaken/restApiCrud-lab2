@@ -29,8 +29,7 @@ Route::get('/messages/{message}', [MessagesApiController::class, 'getWithID']);
 Route::get('/messages/query', [MessagesApiController::class, 'indexQuery']);
 Route::get('/users', [UsersApiController::class, 'index']);
 Route::get('/users/{message}', [UsersApiController::class, 'getWithID']);
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+
 
 
 //Route::group(['middleware' => ['auth:sanctum']], function () {
