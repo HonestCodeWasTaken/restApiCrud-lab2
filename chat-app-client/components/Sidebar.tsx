@@ -18,7 +18,8 @@ import { IoPawOutline } from 'react-icons/io5'
 import NavItem from '../components/NavItem'
 import { INavBarProps } from '../interfaces/INavBarProps'
 
-export const Sidebar: React.FC<INavBarProps> = (seeMessages, see) => {
+export const Sidebar: React.FC<INavBarProps> = (props: INavBarProps) => {
+    const [active, setActive] = useState()
     const [navSize, changeNavSize] = useState("large")
     return (
         <Flex
@@ -52,9 +53,9 @@ export const Sidebar: React.FC<INavBarProps> = (seeMessages, see) => {
                             changeNavSize("small")
                     }}
                 />
-                <NavItem navSize={navSize} icon={FiHome} title="Dashboard" description="This is the description for the dashboard." active={undefined}  />
-                <NavItem navSize={navSize} icon={FiMessageCircle} title="Send a message" active description={undefined} />
-                <NavItem navSize={navSize} icon={FiMessageSquare} title="Messages" description={undefined} active={undefined} />
+                <NavItem onClick={props.seeDashBoard} navSize={navSize} icon={FiHome} title="Dashboard" description="This is the description for the dashboard." active={props.view === "ViewDashboard"}  />
+                <NavItem onClick={props.seeMessageSend} navSize={navSize} icon={FiMessageCircle} title="Send a message" active={props.view === "SendMessage"} description={undefined} />
+                <NavItem onClick={props.seeMessages} navSize={navSize} icon={FiMessageSquare} title="Messages" active={props.view === "ViewMessages"} description={undefined} />
             </Flex>
 
             <Flex

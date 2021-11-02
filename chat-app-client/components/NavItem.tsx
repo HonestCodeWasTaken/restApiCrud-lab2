@@ -16,10 +16,11 @@ interface INavItemProps{
     description: any;
     active: any;
     navSize: string;
+    onClick: () => void;
 }
-export default function NavItem({ icon, title, description, active, navSize }: INavItemProps) {
+export default function NavItem({ icon, title, description, active, navSize, onClick }: INavItemProps) {
     return (
-        <Flex
+        <Flex onClick={onClick}
             mt={30}
             flexDir="column"
             w="100%"
@@ -40,7 +41,7 @@ export default function NavItem({ icon, title, description, active, navSize }: I
                         </Flex>
                     </MenuButton>
                 </Link>
-                <MenuList
+                {/* <MenuList
                     py={0}
                     border="none"
                     w={200}
@@ -48,7 +49,7 @@ export default function NavItem({ icon, title, description, active, navSize }: I
                     ml={5}
                 >
                     <NavHoverBox title={title} icon={icon} description={description} />
-                </MenuList>
+                </MenuList> */}
             </Menu>
         </Flex>
     )

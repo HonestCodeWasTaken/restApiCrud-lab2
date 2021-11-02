@@ -24,4 +24,5 @@ import NavItem from '../components/NavItem'
 
 export default function Sidebar() {
     const [navSize, changeNavSize] = useState("large")
+    
 }

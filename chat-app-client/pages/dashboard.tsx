@@ -11,9 +11,7 @@ import MessagesSVC from "./api/MessagesSVC";
 const Dashboard = () => {
   const restApi = "http://127.0.0.1:8000/api"
 
-  const [sendMessage, setSendMessage] = useState(false);
-  const [dashboard, setDashboard] = useState(true);
-  const [viewMessage, setViewMessage] = useState(false);
+  const [view, setView] = useState("None");
   const [lazyProgrammer, setLazyProgrammer] = useState(false);
   const [whoIsSending, setWhoIsSending] = useState("");
   const [username, setUsername] = useState("");
@@ -58,14 +56,24 @@ const Dashboard = () => {
       autoDismiss: true,
     })
   }
+const setViewSendMessage = () => {
+  setView("SendMessage")
+}
+const setViewDashboard = () => {
+  setView("ViewDashboard")
+}
+const setViewMessages = () => {
+  setView("ViewMessages")
+}
 
   useEffect(() => {
     getUsers();
   }, []);
   return (
     <div>
-      <Sidebar seeMessages={setSendMessage} seeDashBoard={setDashboard} seeMessage={setViewMessage} />
-      {dashboard ? <Flex pos="absolute"
+       {view === "ViewDashboard" ? <Flex>hi im dashboard</Flex>: null}
+      <Sidebar seeMessageSend={setViewSendMessage} seeDashBoard={setViewDashboard} seeMessages={setViewMessages} view={view} />
+      {view === "SendMessage" ? <Flex pos="absolute"
         top="50%"
         left="50%"
         transform="translate(-50%, -50%)"
@@ -93,7 +101,7 @@ const Dashboard = () => {
           </span>
         </Flex>
       </Flex>: null}
-      
+
     </div>
   );
 };
