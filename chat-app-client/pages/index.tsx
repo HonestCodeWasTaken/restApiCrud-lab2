@@ -8,14 +8,9 @@ import { ToastProvider, useToasts } from 'react-toast-notifications'
 import useSWR from 'swr'
 import { Spinner, useColorMode, useColorModeValue } from "@chakra-ui/react";
 import Link from 'next/link'
-import UsersSVC from "./api/users";
-interface IUser {
-   id: number
-   username: string;
-   email: string;
-   created_at: Date;
-   updated_at: Date;
-}
+import UsersSVC from "./api/UsersSVC";
+import { IUser } from "../interfaces/IUser";
+
 const Home: NextPage = () => {
    const restApi = "http://127.0.0.1:8000/api"
    const [register, setRegister] = useState(false);

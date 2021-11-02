@@ -6,6 +6,7 @@ use App\Models\messages;
 use App\Models\users;
 use App\Http\Controllers\MessagesApiController;
 use App\Http\Controllers\UsersApiController;
+use App\Http\Controllers\AuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,14 +27,21 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/messages', [MessagesApiController::class, 'index']);
 Route::get('/messages/{message}', [MessagesApiController::class, 'getWithID']);
 Route::get('/messages/query', [MessagesApiController::class, 'indexQuery']);
-Route::post('/messages', [MessagesApiController::class, 'store']);
-Route::put('/messages/{message}', [MessagesApiController::class, 'update']);
-Route::delete('/messages/{message}', [MessagesApiController::class, 'destroy']);
-
 Route::get('/users', [UsersApiController::class, 'index']);
 Route::get('/users/{message}', [UsersApiController::class, 'getWithID']);
-Route::post('/users', [UsersApiController::class, 'store']);
-Route::put('/users/{user}', [UsersApiController::class, 'update']);
-Route::delete('/users/{user}', [UsersApiController::class, 'destroy']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
+
+//Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('/messages', [MessagesApiController::class, 'store']);
+    Route::put('/messages/{message}', [MessagesApiController::class, 'update']);
+    Route::delete('/messages/{message}', [MessagesApiController::class, 'destroy']);
+
+
+    Route::post('/users', [UsersApiController::class, 'store']);
+    Route::put('/users/{user}', [UsersApiController::class, 'update']);
+    Route::delete('/users/{user}', [UsersApiController::class, 'destroy']);
+//});
 
 
