@@ -10,9 +10,9 @@ import {
 } from '@chakra-ui/react'
 
 interface IMessageProps {
-	name:string;
+	name:string | undefined;
 	message:string;
-	time:Date;
+	time:string;
 }
 export const MessageItem: React.FC<IMessageProps> = (props: IMessageProps) => {
 	return (
@@ -21,7 +21,7 @@ export const MessageItem: React.FC<IMessageProps> = (props: IMessageProps) => {
 			<Flex flexDir="column" ml={4} display={"flex"}>
 				<span style={{ display: "flex" }}>
 					<Heading color="white" as="h3" size="sm">{props.name}</Heading>
-					<Heading fontSize="11px" color="#9b9797" style={{ marginTop: "6px" }} ml={2} as="h3" size="xs">{props.time}</Heading>
+					<Heading fontSize="11px" color="#9b9797" style={{ marginTop: "6px" }} ml={2} as="h3" size="xs">{new Date(props.time).toUTCString()}</Heading>
 				</span>
 
 				<Text fontSize="14px" color="#DCDAD9">{props.message}</Text>

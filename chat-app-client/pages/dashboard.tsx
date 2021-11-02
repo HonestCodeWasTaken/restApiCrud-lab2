@@ -9,6 +9,7 @@ import { useToasts } from "react-toast-notifications";
 import MessagesSVC from "./api/MessagesSVC";
 import {Message} from "../components/Message";
 import {DashboardC} from "../components/DashboardC";
+import { IMessage } from "../interfaces/IMessage";
 
 const Dashboard = () => {
 	const restApi = "http://127.0.0.1:8000/api"
@@ -21,6 +22,8 @@ const Dashboard = () => {
 	const [message, setMessage] = useState("");
 	const [letterCount, setLetterCount] = useState(0);
 	const [users, setUsers] = useState<Array<IUser>>([])
+	const [messages, setMessages] = useState<IMessage>({"status": "NOT INITIALIZED",
+  "messages": []})
 
 	const formBackground = useColorModeValue("gray.100", "gray.700")
 
@@ -67,9 +70,13 @@ const Dashboard = () => {
 	const setViewMessages = () => {
 		setView("ViewMessages")
 	}
-
+	const getMessages = async () => {
+		let messages: IMessage = await UsersSVC.fetchUrl(`${restApi}/messages`)
+		setMessages(messages)
+	}
 	useEffect(() => {
 		getUsers();
+		getMessages();
 	}, []);
 	return (
 		<div>
@@ -104,7 +111,7 @@ const Dashboard = () => {
 					</span>
 				</Flex>
 			</Flex> : null}
-			<Message formBackground={formBackground}></Message>
+			{view === "ViewMessages" ? <Message users={users} formBackground={formBackground} messages={messages}></Message>: null}
 		</div>
 	);
 };
