@@ -56,6 +56,7 @@ export const Sidebar: React.FC<INavBarProps> = (props: INavBarProps) => {
                 <NavItem onClick={props.seeDashBoard} navSize={navSize} icon={FiHome} title="Dashboard" description="This is the description for the dashboard." active={props.view === "ViewDashboard"}  />
                 <NavItem onClick={props.seeMessageSend} navSize={navSize} icon={FiMessageCircle} title="Send a message" active={props.view === "SendMessage"} description={undefined} />
                 <NavItem onClick={props.seeMessages} navSize={navSize} icon={FiMessageSquare} title="Messages" active={props.view === "ViewMessages"} description={undefined} />
+                <NavItem onClick={props.seeMessages} navSize={navSize} icon={FiMessageSquare} title="Messages" active={props.view === "ViewMessages"} description={undefined} />
             </Flex>
 
             <Flex

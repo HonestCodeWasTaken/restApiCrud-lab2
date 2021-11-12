@@ -35,6 +35,7 @@ class MessagesApiController extends Controller
                 'message' => $message->message,
                 'whoSent_ID' => $message->whoSent_ID,
                 'receiver_ID' => $message->receiver_ID,
+                'XDDD' => $message->XDDD,
             ];
         }
 
@@ -53,6 +54,7 @@ class MessagesApiController extends Controller
                 'message' => request('message'),
                 'whoSent_ID' => request('whoSent_ID'),
                 'receiver_ID' => request('receiver_ID'),
+                'XDDD' => request('XDDD'),
             ]
         );
     }

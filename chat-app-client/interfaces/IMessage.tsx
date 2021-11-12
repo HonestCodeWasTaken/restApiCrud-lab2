@@ -9,4 +9,5 @@ export interface IMessageItems {
     receiver_ID: number;
     created_at: string;
     updated_at: string;
+    XDDD: string;
  }

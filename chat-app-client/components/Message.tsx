@@ -36,9 +36,9 @@ export const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
 				</Heading>
 				<Divider></Divider>
 				{messagesParsed.map((item, index) =>{
-					const { id, created_at, updated_at, message, whoSent_ID, receiver_ID } = item; 
+					const { id, created_at, updated_at, message, whoSent_ID, receiver_ID, XDDD } = item; 
 					return (
-						<MessageItem key={id} message={message} time={created_at} name={props.users.find(x => x.id === whoSent_ID)?.username} ></MessageItem>
+						<MessageItem XDDD={XDDD} key={id} message={message} time={created_at} name={props.users.find(x => x.id === whoSent_ID)?.username} ></MessageItem>
 					)
 				})}
 			</Flex>

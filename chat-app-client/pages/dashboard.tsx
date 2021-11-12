@@ -1,14 +1,14 @@
 import { Button } from "@chakra-ui/button";
 import React, { useEffect, useState } from "react";
 import { Sidebar } from '../components/Sidebar'
-import { Flex, Text, IconButton, useColorModeValue, Heading, Input, Textarea } from '@chakra-ui/react'
+import { Flex, Text, IconButton, useColorModeValue, Heading, Input, Textarea, Table, TableCaption, Thead, Tr, Th, Td, Tbody, Tfoot } from '@chakra-ui/react'
 import { FiMenu } from "react-icons/fi";
 import { IUser } from "../interfaces/IUser";
 import UsersSVC from "./api/UsersSVC";
 import { useToasts } from "react-toast-notifications";
 import MessagesSVC from "./api/MessagesSVC";
-import {Message} from "../components/Message";
-import {DashboardC} from "../components/DashboardC";
+import { Message } from "../components/Message";
+import { DashboardC } from "../components/DashboardC";
 import { IMessage } from "../interfaces/IMessage";
 
 const Dashboard = () => {
@@ -23,8 +23,10 @@ const Dashboard = () => {
 	const [letterCount, setLetterCount] = useState(0);
 	const [users, setUsers] = useState<Array<IUser>>([])
 	const [currentUsername, setCurrentUsername] = useState<string | undefined>("")
-	const [messages, setMessages] = useState<IMessage>({"status": "NOT INITIALIZED",
-  "messages": []})
+	const [messages, setMessages] = useState<IMessage>({
+		"status": "NOT INITIALIZED",
+		"messages": []
+	})
 
 	const formBackground = useColorModeValue("gray.100", "gray.700")
 
@@ -88,9 +90,9 @@ const Dashboard = () => {
 	return (
 		<div>
 			<Sidebar seeMessageSend={setViewSendMessage} seeDashBoard={setViewDashboard} seeMessages={setViewMessages} view={view} currentUsername={currentUsername} />
-			{view === "ViewDashboard" ? <DashboardC formBackground={formBackground}/> : null}
+			{view === "ViewDashboard" ? <DashboardC formBackground={formBackground} /> : null}
 			{view === "SendMessage" ? <Flex
-			 pos="absolute"
+				pos="absolute"
 				top="50%"
 				left="50%"
 				transform="translate(-50%, -50%)"
@@ -116,9 +118,43 @@ const Dashboard = () => {
 						<Flex flex={"auto"} alignSelf="end">{letterCount} </Flex>
 						{letterCount === 255 ? <Flex textColor={"red.300"} alignSelf="start">{" Too many characters"}</Flex> : null}
 					</span>
+					<Table variant="simple">
+						<TableCaption>Imperial to metric conversion factors</TableCaption>
+						<Thead>
+							<Tr>
+								<Th>To convert</Th>
+								<Th>into</Th>
+								<Th isNumeric>multiply by</Th>
+							</Tr>
+						</Thead>
+						<Tbody>
+							<Tr>
+								<Td>inches</Td>
+								<Td>millimetres (mm)</Td>
+								<Td isNumeric>25.4</Td>
+							</Tr>
+							<Tr>
+								<Td>feet</Td>
+								<Td>centimetres (cm)</Td>
+								<Td isNumeric>30.48</Td>
+							</Tr>
+							<Tr>
+								<Td>yards</Td>
+								<Td>metres (m)</Td>
+								<Td isNumeric>0.91444</Td>
+							</Tr>
+						</Tbody>
+						<Tfoot>
+							<Tr>
+								<Th>To convert</Th>
+								<Th>into</Th>
+								<Th isNumeric>multiply by</Th>
+							</Tr>
+						</Tfoot>
+					</Table>
 				</Flex>
 			</Flex> : null}
-			{view === "ViewMessages" ? <Message users={users} formBackground={formBackground} messages={messages}></Message>: null}
+			{view === "ViewMessages" ? <Message users={users} formBackground={formBackground} messages={messages}></Message> : null}
 		</div>
 	);
 };
