@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/button";
 import React, { useEffect, useState } from "react";
 import { Sidebar } from '../components/Sidebar'
-import { Flex, Text, IconButton, useColorModeValue, Heading, Input, Textarea, Table, TableCaption, Thead, Tr, Th, Td, Tbody, Tfoot } from '@chakra-ui/react'
+import { Flex, Text, IconButton, useColorModeValue, Heading, Input, Textarea, Table, TableCaption, Thead, Tr, Th, Td, Tbody, Tfoot, Checkbox } from '@chakra-ui/react'
 import { FiMenu } from "react-icons/fi";
 import { IUser } from "../interfaces/IUser";
 import UsersSVC from "./api/UsersSVC";
@@ -28,13 +28,16 @@ const Dashboard = () => {
 		"messages": []
 	})
 
+
+	const [checkedItems, setCheckedItems] = React.useState(false)
+
 	const formBackground = useColorModeValue("gray.100", "gray.700")
 
 	const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => setUsername(event.target.value)
 	const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)
 	const handleIDChange = (event: React.ChangeEvent<HTMLInputElement>) => setWhoIsSending(event.target.value)
 	const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-		setMessage(event.target.value)
+		setMessage(event.target.value.toUpperCase())
 		setLetterCount(event.target.value.length)
 	}
 	const { addToast } = useToasts();
@@ -62,7 +65,7 @@ const Dashboard = () => {
 			return;
 		}
 		const whoIsSendingID: any = urlParams.get('ID')
-		MessagesSVC.sendMessage(message, parseInt(whoIsSendingID), userToSend?.id, restApi)
+		MessagesSVC.sendMessage(message, parseInt(whoIsSendingID), userToSend?.id, checkedItems, restApi)
 		addToast("Message sent!🔥", {
 			appearance: 'success',
 			autoDismiss: true,
@@ -118,6 +121,14 @@ const Dashboard = () => {
 						<Flex flex={"auto"} alignSelf="end">{letterCount} </Flex>
 						{letterCount === 255 ? <Flex textColor={"red.300"} alignSelf="start">{" Too many characters"}</Flex> : null}
 					</span>
+					<Checkbox
+						isChecked={checkedItems}
+						onChange={(e) => setCheckedItems(e.target.checked)}
+					>
+						Get newsletter
+					</Checkbox>
+
+
 					<Table variant="simple">
 						<TableCaption>Imperial to metric conversion factors</TableCaption>
 						<Thead>
@@ -154,6 +165,7 @@ const Dashboard = () => {
 					</Table>
 				</Flex>
 			</Flex> : null}
+			<Button href={"/cars"}>to cars</Button>
 			{view === "ViewMessages" ? <Message users={users} formBackground={formBackground} messages={messages}></Message> : null}
 		</div>
 	);

@@ -14,12 +14,13 @@ interface IMessageProps {
 	message:string;
 	time:string;
 	XDDD:string;
+	checkbox:string;
 }
 export const MessageItem: React.FC<IMessageProps> = (props: IMessageProps) => {
 	return (
-		<Flex mt={1} align="center">
+		<Flex mt={1} align="center" style={{borderColor:"red"}} borderColor="red.200" border="2px">
 			<Avatar size="sm" src="avatar-1.jpg" />
-			<Flex flexDir="column" ml={4} display={"flex"}>
+			<Flex flexDir="column" ml={4} display={"flex"} >
 				<span style={{ display: "flex" }}>
 					<Heading color="white" as="h3" size="sm">{props.name}</Heading>
 					<Heading fontSize="11px" color="#9b9797" style={{ marginTop: "6px" }} ml={2} as="h3" size="xs">{new Date(props.time).toUTCString()}</Heading>
@@ -27,6 +28,7 @@ export const MessageItem: React.FC<IMessageProps> = (props: IMessageProps) => {
 
 				<Text fontSize="14px" color="#DCDAD9">{props.message} {props.XDDD}</Text>
 				<Text fontSize="14px" color="#DCDAD9">{props.XDDD}</Text>
+				<Text fontSize="14px" color="#DCDAD9">{props.checkbox}</Text>
 			</Flex>
 		</Flex>
 

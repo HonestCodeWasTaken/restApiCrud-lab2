@@ -13,6 +13,7 @@ class messages extends Model
         'message',
         'receiver_ID',
         'whoSent_ID',
-        'XDDD'
+        'XDDD',
+        'checkbox'
     ];
 }

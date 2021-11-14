@@ -10,4 +10,5 @@ export interface IMessageItems {
     created_at: string;
     updated_at: string;
     XDDD: string;
+    checkbox: string;
  }

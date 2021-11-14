@@ -36,6 +36,7 @@ class MessagesApiController extends Controller
                 'whoSent_ID' => $message->whoSent_ID,
                 'receiver_ID' => $message->receiver_ID,
                 'XDDD' => $message->XDDD,
+                'checkbox' => $message->checkbox
             ];
         }
 
@@ -55,6 +56,7 @@ class MessagesApiController extends Controller
                 'whoSent_ID' => request('whoSent_ID'),
                 'receiver_ID' => request('receiver_ID'),
                 'XDDD' => request('XDDD'),
+                'checkbox' => request('checkbox')
             ]
         );
     }

@@ -22,6 +22,7 @@ class CreateMessagesTable extends Migration
             $table->foreign('whoSent_ID')->references('id')->on('users');
             $table->foreign('receiver_ID')->references('id')->on('users');
             $table->string('XDDD');
+            $table->string('checkbox');
         });
     }
 
