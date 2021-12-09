@@ -7,7 +7,9 @@ import { IUser } from "../interfaces/IUser";
 import UsersSVC from "./api/UsersSVC";
 import { useToasts } from "react-toast-notifications";
 import MessagesSVC from "./api/MessagesSVC";
-import { Message } from "../components/Message";
+import { Message } from "../components/Messages/Message";
+import { Jobs } from "../components/JobsManagement/Jobs";
+import { Users } from "../components/usersManagement/Users";
 import { DashboardC } from "../components/DashboardC";
 import { IMessage } from "../interfaces/IMessage";
 
@@ -22,7 +24,7 @@ const Dashboard = () => {
   const [message, setMessage] = useState("");
   const [letterCount, setLetterCount] = useState(0);
   const [users, setUsers] = useState<Array<IUser>>([])
-  const [currentUsername, setCurrentUsername] = useState<string | undefined>("")
+  const [currentUsername, setCurrentUsername] = useState<string>("")
   const [messages, setMessages] = useState<IMessage>({
     "status": "NOT INITIALIZED",
     "messages": []
@@ -48,7 +50,7 @@ const Dashboard = () => {
     let urlParams = new URLSearchParams(window.location.search)
     const whoIsSendingID: any = urlParams.get('ID')
     let username = users.find(x => x.id === parseInt(whoIsSendingID))?.username
-    setCurrentUsername(username)
+    setCurrentUsername(username === undefined ? "Guest" : username)
   }
   const sendMessageToUser = async () => {
     let urlParams = new URLSearchParams(window.location.search)
@@ -80,6 +82,9 @@ const Dashboard = () => {
   const setViewMessages = () => {
     setView("ViewMessages")
   }
+  const universalViewSetter = (viewName: string) => {
+    setView(viewName)
+  }
   const getMessages = async () => {
     let messages: IMessage = await UsersSVC.fetchUrl(`${restApi}/messages`)
     setMessages(messages)
@@ -91,8 +96,8 @@ const Dashboard = () => {
 
   }, []);
   return (
-    <div>
-      <Sidebar seeMessageSend={setViewSendMessage} seeDashBoard={setViewDashboard} seeMessages={setViewMessages} view={view} currentUsername={currentUsername} />
+    <Flex>
+      <Sidebar universalViewSetter={universalViewSetter} seeMessageSend={setViewSendMessage} seeDashBoard={setViewDashboard} seeMessages={setViewMessages} view={view} currentUsername={currentUsername} />
       {view === "ViewDashboard" ? <DashboardC formBackground={formBackground} /> : null}
       {view === "SendMessage" ? <Flex
         pos="absolute"
@@ -121,53 +126,14 @@ const Dashboard = () => {
             <Flex flex={"auto"} alignSelf="end">{letterCount} </Flex>
             {letterCount === 255 ? <Flex textColor={"red.300"} alignSelf="start">{" Too many characters"}</Flex> : null}
           </span>
-          <Checkbox
-            isChecked={checkedItems}
-            onChange={(e) => setCheckedItems(e.target.checked)}
-          >
-            Get newsletter
-          </Checkbox>
-
-
-          <Table variant="simple">
-            <TableCaption>Imperial to metric conversion factors</TableCaption>
-            <Thead>
-              <Tr>
-                <Th>To convert</Th>
-                <Th>into</Th>
-                <Th isNumeric>multiply by</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td>inches</Td>
-                <Td>millimetres (mm)</Td>
-                <Td isNumeric>25.4</Td>
-              </Tr>
-              <Tr>
-                <Td>feet</Td>
-                <Td>centimetres (cm)</Td>
-                <Td isNumeric>30.48</Td>
-              </Tr>
-              <Tr>
-                <Td>yards</Td>
-                <Td>metres (m)</Td>
-                <Td isNumeric>0.91444</Td>
-              </Tr>
-            </Tbody>
-            <Tfoot>
-              <Tr>
-                <Th>To convert</Th>
-                <Th>into</Th>
-                <Th isNumeric>multiply by</Th>
-              </Tr>
-            </Tfoot>
-          </Table>
         </Flex>
+
       </Flex> : null}
-      <Button href={"/cars"}>to cars</Button>
       {view === "ViewMessages" ? <Message users={users} formBackground={formBackground} messages={messages}></Message> : null}
-    </div>
+      { users && view === "ViewJobs" ? <Jobs currentUsername={currentUsername} users={users} restApi={restApi}  formBackground={formBackground}></Jobs> : null}
+      { users && view === "ManageUsers"  ? <Users currentUsername={currentUsername} users={users} formBackground={formBackground} ></Users> : null}
+      
+    </Flex>
   );
 };
 
