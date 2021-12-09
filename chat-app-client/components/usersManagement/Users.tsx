@@ -1,42 +1,103 @@
-
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
-	Flex,
-	Text,
-	IconButton,
-	Divider,
-	Avatar,
-	Heading,
-	Button,
-	TableCaption,
-	Table,
-	Thead,
-	Th,
-	Tr,
-	Tbody,
-	Td,
-	Tfoot
+  Flex,
+  Text,
+  IconButton,
+  Divider,
+  Avatar,
+  Heading,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Table,
+  Thead,
+  Th,
+  Tr,
+  Tbody,
+  Td,
+  Tfoot,
+  useDisclosure,
+  Button
 } from '@chakra-ui/react'
 import { IUser } from '../../interfaces/IUser'
+import { IJob } from '../../interfaces/IJob'
+import UsersSVC from '../../pages/api/UsersSVC'
 
-interface IMessageProps {
-	formBackground: string;
-	users: Array<IUser>;
-    currentUsername: string | undefined;
-
+interface IUserProps {
+  formBackground: string;
+  users: Array<IUser>;
+  currentUsername: string | undefined;
+  restApi:string
 }
-export const Users: React.FC<IMessageProps> = (props: IMessageProps) => {
-	// const [messagesNeeded, setMessagesNeeded] = useState<Array<IMessageItems>>(props.messages.messages)
-	let urlParams = new URLSearchParams(window.location.search)
-	const whoIsSendingID: any = urlParams.get('ID')
-	// let messagesParsed = props.messages.messages.filter(x => x.receiver_ID === parseInt(whoIsSendingID))
+export const Users: React.FC<IUserProps> = (props: IUserProps) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { restApi, users, currentUsername, formBackground } = props
 
-	// const filterJobs = () => {
-	// 	jobsState = jobsState.filter(x => x.jobName === selectedJob)
-	// 	setJobs(jobsState)
-	// }
-	return (
-		<Flex></Flex>
+  let urlParams = new URLSearchParams(window.location.search)
+  const whoIsSendingID: any = urlParams.get('ID')
+  return (
+    <Flex
+      w="full"
+      alignItems="center"
+      justifyContent="center">
+      <Flex
+        justifyContent="center" alignItems="center" width={"90vh"}>
+        <Flex direction="column" w="inherit" background={props.formBackground} p={3} rounded={6}>
+          <Heading mb={6}>
+            {"Jobs"}
+          </Heading>
+          <Divider></Divider>
+          <Table size='sm'>
+            <Thead>
+              <Tr>
+                <Th>id</Th>
+                <Th>created_at</Th>
+                <Th>updated_at</Th>
+                <Th>email</Th>
+                <Th>username</Th>
+                <Th>role</Th>
+                <Th>certifiedToPost</Th>
+                <Th>Edit</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {users.map((item, index) => {
+                return (
+                  <Tr key={index}>
+                    <Td>{item.id}</Td>
+                    <Td>{item.created_at}</Td>
+                    <Td>{item.updated_at}</Td>
+                    <Td>{item.email}</Td>
+                    <Td>{item.username}</Td>
+                    <Td>{item.role}</Td>
+                    <Td>{item.certifiedToPost}</Td>
+                    <Td><Button disabled={currentUsername === item.username ? true : false} onClick={onOpen}>Edit</Button></Td>
+                  </Tr>
+                )
+              })}
+            </Tbody>
+          </Table>
+        </Flex>
+      </Flex>
+      <Modal closeOnOverlayClick={true} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Job Listing</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>Do you really want to let this user post ads?</ModalBody>
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3}>
+              Yes
+            </Button>
+            <Button onClick={onClose}>No</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </Flex>
 
-	)
+  )
 }

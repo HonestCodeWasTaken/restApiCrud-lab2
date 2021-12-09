@@ -27,11 +27,10 @@ import { useToasts } from 'react-toast-notifications'
 
 interface IMessageProps {
   formBackground: string;
-  messages: IMessage;
   users: Array<IUser>;
   restApi:string
 }
-export const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
+export const MessageSend: React.FC<IMessageProps> = (props: IMessageProps) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");

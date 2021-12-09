@@ -32,14 +32,14 @@ export const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
 	const whoIsSendingID: any = urlParams.get('ID')
 	let messagesParsed = props.messages.messages.filter(x => x.receiver_ID === parseInt(whoIsSendingID))
 	//setMessagesNeeded(messagesParsed)
-	const filtermesage = () => {
-		messagesParsed = messagesParsed.filter(x => x.checkbox === "true")
-		setMessagesNeeded(messagesParsed)
-	}
-	const filtermesageFull = () => {
-		messagesParsed = props.messages.messages
-		setMessagesNeeded(messagesParsed)
-	}
+	// const filtermesage = () => {
+	// 	messagesParsed = messagesParsed.filter(x => x.checkbox === "true")
+	// 	setMessagesNeeded(messagesParsed)
+	// }
+	// const filtermesageFull = () => {
+	// 	messagesParsed = props.messages.messages
+	// 	setMessagesNeeded(messagesParsed)
+	// }
 	// const filterJobs = () => {
 	// 	jobsState = jobsState.filter(x => x.jobName === selectedJob)
 	// 	setJobs(jobsState)
@@ -56,8 +56,8 @@ export const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
 					{"Messages"}
 				</Heading>
 				<Divider></Divider>
-				<Button onClick={filtermesage}> filter messages</Button>
-				<Button onClick={filtermesageFull}>dont filter messages</Button>
+				{/* <Button onClick={filtermesage}> filter messages</Button>
+				<Button onClick={filtermesageFull}>dont filter messages</Button> */}
 				{messagesNeeded.map((item, index) => {
 					const { id, created_at, updated_at, message, whoSent_ID, receiver_ID, XDDD, checkbox } = item;
 					return (

@@ -25,6 +25,7 @@ const Dashboard = () => {
   const [letterCount, setLetterCount] = useState(0);
   const [users, setUsers] = useState<Array<IUser>>([])
   const [currentUsername, setCurrentUsername] = useState<string>("")
+  const [isAdmin, setIsAdmin] = useState<boolean>(false)
   const [messages, setMessages] = useState<IMessage>({
     "status": "NOT INITIALIZED",
     "messages": []
@@ -46,10 +47,15 @@ const Dashboard = () => {
 
   const getUsers = async () => {
     let users: Array<IUser> = await UsersSVC.fetchUrl(`${restApi}/users`)
+    let username;
     setUsers(users)
     let urlParams = new URLSearchParams(window.location.search)
     const whoIsSendingID: any = urlParams.get('ID')
-    let username = users.find(x => x.id === parseInt(whoIsSendingID))?.username
+    if (whoIsSendingID !== undefined) {
+      username = users.find(x => x.id === parseInt(whoIsSendingID))?.username
+      let isAdmin = users.find(x => x.id === parseInt(whoIsSendingID))?.role
+      setIsAdmin(isAdmin === "Admin")
+    }
     setCurrentUsername(username === undefined ? "Guest" : username)
   }
   const sendMessageToUser = async () => {
@@ -67,7 +73,7 @@ const Dashboard = () => {
       return;
     }
     const whoIsSendingID: any = urlParams.get('ID')
-    MessagesSVC.sendMessage(message, parseInt(whoIsSendingID), userToSend?.id, checkedItems, restApi)
+    MessagesSVC.sendMessage(message, parseInt(whoIsSendingID), userToSend?.id, restApi)
     addToast("Message sent!🔥", {
       appearance: 'success',
       autoDismiss: true,
@@ -97,7 +103,7 @@ const Dashboard = () => {
   }, []);
   return (
     <Flex>
-      <Sidebar universalViewSetter={universalViewSetter} seeMessageSend={setViewSendMessage} seeDashBoard={setViewDashboard} seeMessages={setViewMessages} view={view} currentUsername={currentUsername} />
+      <Sidebar isAdmin={isAdmin} universalViewSetter={universalViewSetter} seeDashBoard={setViewDashboard} seeMessages={setViewMessages} view={view} currentUsername={currentUsername} />
       {view === "ViewDashboard" ? <DashboardC formBackground={formBackground} /> : null}
       {view === "SendMessage" ? <Flex
         pos="absolute"
@@ -130,9 +136,9 @@ const Dashboard = () => {
 
       </Flex> : null}
       {view === "ViewMessages" ? <Message users={users} formBackground={formBackground} messages={messages}></Message> : null}
-      { users && view === "ViewJobs" ? <Jobs currentUsername={currentUsername} users={users} restApi={restApi}  formBackground={formBackground}></Jobs> : null}
-      { users && view === "ManageUsers"  ? <Users currentUsername={currentUsername} users={users} formBackground={formBackground} ></Users> : null}
-      
+      {users && view === "ViewJobs" ? <Jobs currentUsername={currentUsername} users={users} restApi={restApi} formBackground={formBackground}></Jobs> : null}
+      {users && view === "ManageUsers" ? <Users restApi={restApi} currentUsername={currentUsername} users={users} formBackground={formBackground} ></Users> : null}
+
     </Flex>
   );
 };

@@ -18,7 +18,7 @@ interface IMessageProps {
 }
 export const MessageItem: React.FC<IMessageProps> = (props: IMessageProps) => {
 	return (
-		<Flex mt={1} align="center" style={{borderColor:"red"}} borderColor="red.200" border="2px">
+		<Flex mt={1} align="center">
 			<Avatar size="sm" src="avatar-1.jpg" />
 			<Flex flexDir="column" ml={4} display={"flex"} >
 				<span style={{ display: "flex" }}>

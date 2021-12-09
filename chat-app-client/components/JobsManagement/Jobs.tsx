@@ -27,6 +27,7 @@ import {
 import { IUser } from '../../interfaces/IUser'
 import { IJob } from '../../interfaces/IJob'
 import UsersSVC from '../../pages/api/UsersSVC'
+import { MessageSend } from '../Messages/MessageSend'
 
 interface IJobProps {
   restApi: string
@@ -36,16 +37,15 @@ interface IJobProps {
 }
 export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
   const [jobs, setJobs] = useState<Array<IJob>>([])
-  const [usersx, setUsers] = useState<Array<IUser>>([])
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { restApi, users } = props
+  const { restApi, users, currentUsername, formBackground } = props
   const getJobs = async () => {
     let jobs: Array<IJob> = await UsersSVC.fetchUrl(`${restApi}/jobs`)
     let urlParams = new URLSearchParams(window.location.search)
     const whoIsSendingID: any = urlParams.get('ID')
     setJobs(jobs)
   }
-  const getUserByID = (creatorID : number) =>{
+  const getUserByID = (creatorID: number) => {
     let name = users.find(x => x.id === creatorID)?.username
     return name
   }
@@ -84,13 +84,13 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
               {jobs.map((item, index) => {
                 return (
                   <Tr key={index}>
-                  <Td>{item.title}</Td>
-                  <Td>{item.description}</Td>
-                  <Td>{item.type}</Td>
-                  <Td>{item.howLongItLasts}</Td>
-                  <Td>{getUserByID(item.creatorId)}</Td>
-                  <Td><Button onClick={onOpen}>Send message</Button></Td>
-                </Tr>
+                    <Td>{item.title}</Td>
+                    <Td>{item.description}</Td>
+                    <Td>{item.type}</Td>
+                    <Td>{item.howLongItLasts}</Td>
+                    <Td>{getUserByID(item.creatorId)}</Td>
+                    <Td><Button disabled={currentUsername === "Guest" ? true : false} onClick={onOpen}>Send message</Button></Td>
+                  </Tr>
                 )
               })}
             </Tbody>
@@ -101,16 +101,11 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
       <Modal closeOnOverlayClick={true} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create your account</ModalHeader>
+          <ModalHeader>Job Listing</ModalHeader>
           <ModalCloseButton />
-          <ModalBody pb={6}>
-
-          </ModalBody>
+          <MessageSend formBackground={formBackground} users={users} restApi={restApi}> </MessageSend>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3}>
-              Send
-            </Button>
             <Button onClick={onClose}>Cancel</Button>
           </ModalFooter>
         </ModalContent>

@@ -1,8 +1,9 @@
 export interface INavBarProps {
-seeMessageSend: () => void;
+// seeMessageSend: () => void;
 seeDashBoard: () => void;
 seeMessages: () => void;
 universalViewSetter: (view: string) => void;
 view:string;
 currentUsername:any;
+isAdmin:Boolean
  }
