@@ -15,5 +15,7 @@ class users extends Authenticatable
     protected $fillable = [
         'username',
         'email',
+        'certifiedToPost',
+        'role',
     ];
 }

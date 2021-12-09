@@ -17,11 +17,15 @@ class UsersApiController extends Controller
     {
         request()->validate([
             'username' => 'required',
-            'email' => 'required'
+            'email' => 'required',
+            'certifiedToPost' => 'required',
+            'role' => 'required',
         ]);
         return users::create(
             [
                 'username' => request('username'),
+                'certifiedToPost' => request('certifiedToPost'),
+                'role' => request('role'),
                 'email' => request('email')
             ]
         );
@@ -31,11 +35,15 @@ class UsersApiController extends Controller
     {
         request()->validate([
             'username' => 'required',
-            'email' => 'required'
+            'email' => 'required',
+            'certifiedToPost' => 'required',
+            'role' => 'required',
         ]);
 
         $success = $user->update([
             'username' => request('username'),
+            'certifiedToPost' => request('certifiedToPost'),
+            'role' => request('role'),
             'email' => request('email')
         ]);
 

@@ -7,6 +7,8 @@ use App\Models\users;
 use App\Http\Controllers\MessagesApiController;
 use App\Http\Controllers\UsersApiController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\JobPostsController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -30,17 +32,18 @@ Route::get('/messages/query', [MessagesApiController::class, 'indexQuery']);
 Route::get('/users', [UsersApiController::class, 'index']);
 Route::get('/users/{message}', [UsersApiController::class, 'getWithID']);
 
+Route::get('/jobs', [JobPostsController::class, 'index']);
+Route::get('/jobs/{id}', [JobPostsController::class, 'getWithID']);
+
+Route::post('/messages', [MessagesApiController::class, 'store']);
+Route::put('/messages/{message}', [MessagesApiController::class, 'update']);
+Route::delete('/messages/{message}', [MessagesApiController::class, 'destroy']);
 
 
-//Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::post('/messages', [MessagesApiController::class, 'store']);
-    Route::put('/messages/{message}', [MessagesApiController::class, 'update']);
-    Route::delete('/messages/{message}', [MessagesApiController::class, 'destroy']);
+Route::post('/users', [UsersApiController::class, 'store']);
+Route::put('/users/{user}', [UsersApiController::class, 'update']);
+Route::delete('/users/{user}', [UsersApiController::class, 'destroy']);
 
-
-    Route::post('/users', [UsersApiController::class, 'store']);
-    Route::put('/users/{user}', [UsersApiController::class, 'update']);
-    Route::delete('/users/{user}', [UsersApiController::class, 'destroy']);
-//});
-
-
+Route::post('/jobs', [JobPostsController::class, 'store']);
+Route::put('/jobs/{user}', [JobPostsController::class, 'update']);
+Route::delete('/jobs/{user}', [JobPostsController::class, 'destroy']);
