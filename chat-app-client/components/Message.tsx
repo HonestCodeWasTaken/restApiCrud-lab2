@@ -40,7 +40,10 @@ export const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
 		messagesParsed = props.messages.messages
 		setMessagesNeeded(messagesParsed)
 	}
-
+	// const filterJobs = () => {
+	// 	jobsState = jobsState.filter(x => x.jobName === selectedJob)
+	// 	setJobs(jobsState)
+	// }
 	return (
 		<Flex
 			pos="absolute"
