@@ -57,7 +57,7 @@ export const Sidebar: React.FC<INavBarProps> = (props: INavBarProps) => {
                 <NavItem onClick={props.seeDashBoard} navSize={navSize} icon={FiHome} title="Dashboard" description="This is the description for the dashboard." active={props.view === "ViewDashboard"}  />
                 <NavItem onClick={props.seeMessages} navSize={navSize} icon={FiMessageSquare} title="Messages" active={props.view === "ViewMessages"} description={undefined} />
                 <NavItem onClick={() => props.universalViewSetter("ViewJobs")} navSize={navSize} icon={FiHome} title="Jobs" active={props.view === "ViewJobs"} description={undefined} />
-                {props.isAdmin ? <NavItem onClick={() => props.universalViewSetter("ViewUsers")} navSize={navSize} icon={FiUser} title="Users" active={props.view === "ViewUsers"} description={undefined} /> : null}
+                {props.isAdmin ? <NavItem onClick={() => props.universalViewSetter("ManageUsers")} navSize={navSize} icon={FiUser} title="Users" active={props.view === "ManageUsers"} description={undefined} /> : null}
             </Flex>
 
             <Flex

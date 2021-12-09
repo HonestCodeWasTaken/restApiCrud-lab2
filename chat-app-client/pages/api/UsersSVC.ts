@@ -1,4 +1,5 @@
 import axios from "axios";
+import { IUser } from "../../interfaces/IUser";
 
 export default class UsersSVC {
   public static uploadUser = async (username: string, email: string, url: string) => {
@@ -15,8 +16,8 @@ export default class UsersSVC {
   public static fetchUrl = async (url: string) => {
     return fetch(url).then(r => r.json())
   }
-  public static postJob = async (title: string, description: string, type: string, howLongItLasts: string, creatorId: number, url: string) => {
-    axios.post(`${url}/users`, {
+  public static postJob = async (title: string, description: string, type: string, howLongItLasts: string, creatorId: number | undefined, url: string) => {
+    axios.post(`${url}/jobs`, {
       "title": title,
       "description": description,
       "type": type,
@@ -37,13 +38,12 @@ export default class UsersSVC {
         console.log(error);
       });
   }
-  public static putJob = async (title: string, description: string, type: string, howLongItLasts: string, creatorId: number, url: string) => {
-    axios.put(`${url}/users`, {
-      "title": title,
-      "description": description,
-      "type": type,
-      "howLongItLasts": howLongItLasts,
-      "creatorId": creatorId
+  public static putUser = async (user: IUser, url: string) => {
+    axios.put(`${url}/users/${user.id}`, {
+      "username":user.username,
+      "email":user.email,
+      "certifiedToPost":"yes",
+      "role":user.role
     }).then(function (response) {
       console.log(response);
     })

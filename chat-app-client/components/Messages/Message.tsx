@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	Flex,
 	Text,
@@ -30,8 +30,10 @@ export const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
 	const [messagesNeeded, setMessagesNeeded] = useState<Array<IMessageItems>>(props.messages.messages)
 	let urlParams = new URLSearchParams(window.location.search)
 	const whoIsSendingID: any = urlParams.get('ID')
-	let messagesParsed = props.messages.messages.filter(x => x.receiver_ID === parseInt(whoIsSendingID))
-	//setMessagesNeeded(messagesParsed)
+	const getMessagedNeeded = () => {
+		let messagesParsed = props.messages.messages.filter(x => x.receiver_ID === parseInt(whoIsSendingID))
+		setMessagesNeeded(messagesParsed)
+	}
 	// const filtermesage = () => {
 	// 	messagesParsed = messagesParsed.filter(x => x.checkbox === "true")
 	// 	setMessagesNeeded(messagesParsed)
@@ -44,6 +46,9 @@ export const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
 	// 	jobsState = jobsState.filter(x => x.jobName === selectedJob)
 	// 	setJobs(jobsState)
 	// }
+	useEffect(() => {
+		getMessagedNeeded();
+	}, []);
 	return (
 		<Flex
 			pos="absolute"
@@ -64,7 +69,7 @@ export const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
 						<MessageItem checkbox={checkbox} XDDD={XDDD} key={id} message={message} time={created_at} name={props.users.find(x => x.id === whoSent_ID)?.username} ></MessageItem>
 					)
 				})}
-				
+
 			</Flex>
 		</Flex>
 

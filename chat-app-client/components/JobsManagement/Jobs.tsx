@@ -22,28 +22,56 @@ import {
   Td,
   Tfoot,
   useDisclosure,
-  Button
+  Button,
+  Icon,
+  Stack,
+  Input
 } from '@chakra-ui/react'
+import { useToasts } from "react-toast-notifications";
+
 import { IUser } from '../../interfaces/IUser'
 import { IJob } from '../../interfaces/IJob'
 import UsersSVC from '../../pages/api/UsersSVC'
 import { MessageSend } from '../Messages/MessageSend'
+import { FiPlusCircle } from 'react-icons/fi'
 
 interface IJobProps {
   restApi: string
   formBackground: string;
   users: Array<IUser>;
   currentUsername: string;
+  currentUserId: number | undefined;
+  currentUser: IUser | undefined
 }
 export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
   const [jobs, setJobs] = useState<Array<IJob>>([])
+  const [title, SetTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [type, setType] = useState("");
+  const [howLongItLasts, setHowLongItLasts] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { restApi, users, currentUsername, formBackground } = props
+  const {
+    isOpen: isAddOpen,
+    onOpen: onOpenAdd,
+    onClose: onCloseAdd,
+  } = useDisclosure();
+  const { restApi, users, currentUsername, formBackground, currentUserId, currentUser } = props
+  const { addToast } = useToasts();
+
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => SetTitle(event.target.value)
+  const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => setDescription(event.target.value)
+  const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => setType(event.target.value)
+  const handleHowLongItLastsChange = (event: React.ChangeEvent<HTMLInputElement>) => setHowLongItLasts(event.target.value)
+
   const getJobs = async () => {
     let jobs: Array<IJob> = await UsersSVC.fetchUrl(`${restApi}/jobs`)
     let urlParams = new URLSearchParams(window.location.search)
     const whoIsSendingID: any = urlParams.get('ID')
     setJobs(jobs)
+  }
+  const createNewTask = async () => {
+    await UsersSVC.postJob(title, description, type, howLongItLasts, currentUserId, props.restApi);
+    await getJobs();
   }
   const getUserByID = (creatorID: number) => {
     let name = users.find(x => x.id === creatorID)?.username
@@ -97,7 +125,6 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
           </Table>
         </Flex>
       </Flex>
-
       <Modal closeOnOverlayClick={true} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -107,6 +134,45 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
 
           <ModalFooter>
             <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <IconButton
+        colorScheme="teal"
+        aria-label="Call Segun"
+        size="sm"
+        icon={<Icon as={FiPlusCircle} />}
+        margin={4}
+        onClick={onOpenAdd}
+        disabled={currentUser?.certifiedToPost !== "yes"}
+      />
+
+      <Modal closeOnOverlayClick={true} isOpen={isAddOpen} onClose={onCloseAdd}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Job Listing</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Stack spacing={3}>
+              <Input onChange={handleTitleChange} placeholder='title' />
+              <Input onChange={handleDescriptionChange} placeholder='description' />
+              <Input onChange={handleTypeChange} placeholder='type' />
+              <Input type={"date"} onChange={handleHowLongItLastsChange} placeholder='howLongItLasts' />
+            </Stack>
+          </ModalBody>
+
+
+          <ModalFooter>
+            <Button onClick={() => {
+              createNewTask()
+              addToast("Task created", {
+                appearance: 'success',
+                autoDismiss: true,
+              })
+
+            }}>Submit</Button>
+            <Button ml={4} onClick={onCloseAdd}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

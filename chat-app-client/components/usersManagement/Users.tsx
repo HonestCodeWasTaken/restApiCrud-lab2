@@ -31,12 +31,20 @@ interface IUserProps {
   formBackground: string;
   users: Array<IUser>;
   currentUsername: string | undefined;
-  restApi:string
+  restApi: string;
+  updateUsers: () => void;
 }
 export const Users: React.FC<IUserProps> = (props: IUserProps) => {
+  const [selectedUser, setSelectedUser] = useState<IUser>()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { restApi, users, currentUsername, formBackground } = props
-
+  const { restApi, users, currentUsername, formBackground, updateUsers } = props
+  const givePermissionsToUser = async () => {
+    if (selectedUser !== undefined) {
+      await UsersSVC.putUser(selectedUser, restApi)
+    }
+    location.reload()
+    onClose()
+  }
   let urlParams = new URLSearchParams(window.location.search)
   const whoIsSendingID: any = urlParams.get('ID')
   return (
@@ -48,7 +56,7 @@ export const Users: React.FC<IUserProps> = (props: IUserProps) => {
         justifyContent="center" alignItems="center" width={"90vh"}>
         <Flex direction="column" w="inherit" background={props.formBackground} p={3} rounded={6}>
           <Heading mb={6}>
-            {"Jobs"}
+            {"Users"}
           </Heading>
           <Divider></Divider>
           <Table size='sm'>
@@ -69,13 +77,16 @@ export const Users: React.FC<IUserProps> = (props: IUserProps) => {
                 return (
                   <Tr key={index}>
                     <Td>{item.id}</Td>
-                    <Td>{item.created_at}</Td>
-                    <Td>{item.updated_at}</Td>
+                    <Td>{new Date(item.created_at).toUTCString()}</Td>
+                    <Td>{new Date(item.updated_at).toUTCString()}</Td>
                     <Td>{item.email}</Td>
                     <Td>{item.username}</Td>
                     <Td>{item.role}</Td>
                     <Td>{item.certifiedToPost}</Td>
-                    <Td><Button disabled={currentUsername === item.username ? true : false} onClick={onOpen}>Edit</Button></Td>
+                    <Td><Button disabled={currentUsername === item.username ? true : false} onClick={() => {
+                      onOpen()
+                      setSelectedUser(item)
+                    }}>Permission to post</Button></Td>
                   </Tr>
                 )
               })}
@@ -90,7 +101,7 @@ export const Users: React.FC<IUserProps> = (props: IUserProps) => {
           <ModalCloseButton />
           <ModalBody>Do you really want to let this user post ads?</ModalBody>
           <ModalFooter>
-            <Button colorScheme='blue' mr={3}>
+            <Button colorScheme='blue' onClick={givePermissionsToUser} mr={3}>
               Yes
             </Button>
             <Button onClick={onClose}>No</Button>

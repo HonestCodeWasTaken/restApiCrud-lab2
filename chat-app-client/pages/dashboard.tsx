@@ -25,6 +25,8 @@ const Dashboard = () => {
   const [letterCount, setLetterCount] = useState(0);
   const [users, setUsers] = useState<Array<IUser>>([])
   const [currentUsername, setCurrentUsername] = useState<string>("")
+  const [currentUserID, setCurrentUserID] = useState<number | undefined>(-1)
+  const [currentUser, setCurrentUser] = useState<IUser>()
   const [isAdmin, setIsAdmin] = useState<boolean>(false)
   const [messages, setMessages] = useState<IMessage>({
     "status": "NOT INITIALIZED",
@@ -44,17 +46,24 @@ const Dashboard = () => {
     setLetterCount(event.target.value.length)
   }
   const { addToast } = useToasts();
-
+  const onlyGetUsers = async () => {
+    let users: Array<IUser> = await UsersSVC.fetchUrl(`${restApi}/users`)
+    setUsers(users)
+  }
   const getUsers = async () => {
     let users: Array<IUser> = await UsersSVC.fetchUrl(`${restApi}/users`)
     let username;
+    let userId;
     setUsers(users)
     let urlParams = new URLSearchParams(window.location.search)
     const whoIsSendingID: any = urlParams.get('ID')
     if (whoIsSendingID !== undefined) {
       username = users.find(x => x.id === parseInt(whoIsSendingID))?.username
       let isAdmin = users.find(x => x.id === parseInt(whoIsSendingID))?.role
+      userId = users.find(x => x.id === parseInt(whoIsSendingID))?.id
       setIsAdmin(isAdmin === "Admin")
+      setCurrentUserID(userId)
+      setCurrentUser(users.find(x => x.id === parseInt(whoIsSendingID)))
     }
     setCurrentUsername(username === undefined ? "Guest" : username)
   }
@@ -136,8 +145,8 @@ const Dashboard = () => {
 
       </Flex> : null}
       {view === "ViewMessages" ? <Message users={users} formBackground={formBackground} messages={messages}></Message> : null}
-      {users && view === "ViewJobs" ? <Jobs currentUsername={currentUsername} users={users} restApi={restApi} formBackground={formBackground}></Jobs> : null}
-      {users && view === "ManageUsers" ? <Users restApi={restApi} currentUsername={currentUsername} users={users} formBackground={formBackground} ></Users> : null}
+      {users && view === "ViewJobs" ? <Jobs currentUser={currentUser} currentUserId={currentUserID} currentUsername={currentUsername} users={users} restApi={restApi} formBackground={formBackground}></Jobs> : null}
+      {users && view === "ManageUsers" ? <Users updateUsers={onlyGetUsers} restApi={restApi} currentUsername={currentUsername} users={users} formBackground={formBackground} ></Users> : null}
 
     </Flex>
   );
