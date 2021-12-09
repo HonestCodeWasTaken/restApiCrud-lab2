@@ -20,7 +20,7 @@ const Home: NextPage = () => {
    const [userChecked, setUserChecked] = useState(false);
 
    const formBackground = useColorModeValue("gray.100", "gray.700")
-   const {toggleColorMode} = useColorMode()
+   const { toggleColorMode } = useColorMode()
 
    const { addToast } = useToasts();
    const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => setUsername(event.target.value)
@@ -36,7 +36,7 @@ const Home: NextPage = () => {
       setLoading(true);
       let users: Array<IUser> = await UsersSVC.fetchUrl(`${restApi}/users`)
       const user: IUser | undefined = users.find(x => x.email === email && x.username === username)
-      const exists: boolean = user !== null && user !== undefined 
+      const exists: boolean = user !== null && user !== undefined
       setTimeout(() => { console.log("World!"); }, 2000);
       setLoading(false);
       if (exists === false) {
@@ -72,6 +72,10 @@ const Home: NextPage = () => {
                   }}>Submit</Button> : null}
                </span>
                <Button onClick={toggleColorMode} mt={6}>Dark mode</Button>
+               <Button mt={6}>
+                  <Link href={"/dashboard"}>Login as a guest
+                  </Link>
+               </Button>
                {loading && <Spinner mt={3} alignItems="center" justifyContent="center" />}
             </Flex>
          </Flex>
