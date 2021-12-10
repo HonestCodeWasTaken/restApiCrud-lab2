@@ -34,6 +34,7 @@ import { IJob } from '../../interfaces/IJob'
 import UsersSVC from '../../pages/api/UsersSVC'
 import { MessageSend } from '../Messages/MessageSend'
 import { FiPlusCircle } from 'react-icons/fi'
+import { rest } from 'lodash';
 
 interface IJobProps {
   restApi: string
@@ -49,11 +50,17 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
   const [description, setDescription] = useState("");
   const [type, setType] = useState("");
   const [howLongItLasts, setHowLongItLasts] = useState("");
+  const [selectedJob, setSelectedJob] = useState<IJob>();
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
     isOpen: isAddOpen,
     onOpen: onOpenAdd,
     onClose: onCloseAdd,
+  } = useDisclosure();
+  const {
+    isOpen: isDelete,
+    onOpen: onOpenDelete,
+    onClose: onCloseDelete,
   } = useDisclosure();
   const { restApi, users, currentUsername, formBackground, currentUserId, currentUser } = props
   const { addToast } = useToasts();
@@ -72,6 +79,12 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
   const createNewTask = async () => {
     await UsersSVC.postJob(title, description, type, howLongItLasts, currentUserId, props.restApi);
     await getJobs();
+    location.reload()
+  }
+  const deleteTask = async () => {
+    await UsersSVC.deleteJob(selectedJob?.id, restApi)
+    await getJobs();
+    location.reload()
   }
   const getUserByID = (creatorID: number) => {
     let name = users.find(x => x.id === creatorID)?.username
@@ -106,6 +119,7 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
                 <Th>howLongItLasts</Th>
                 <Th>creator</Th>
                 <Th>Send message</Th>
+                <Th>Delete</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -118,6 +132,9 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
                     <Td>{item.howLongItLasts}</Td>
                     <Td>{getUserByID(item.creatorId)}</Td>
                     <Td><Button disabled={currentUsername === "Guest" ? true : false} onClick={onOpen}>Send message</Button></Td>
+                    <Td><Button disabled={currentUser?.role !== "Admin" ? true : false} onClick={() => {
+                       setSelectedJob(item);
+                      onOpenDelete();}}>Delete</Button></Td>
                   </Tr>
                 )
               })}
@@ -166,13 +183,37 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
           <ModalFooter>
             <Button onClick={() => {
               createNewTask()
-              addToast("Task created", {
+              addToast("Job created", {
                 appearance: 'success',
                 autoDismiss: true,
               })
 
             }}>Submit</Button>
             <Button ml={4} onClick={onCloseAdd}>Close</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      
+
+
+      <Modal closeOnOverlayClick={true} isOpen={isDelete} onClose={onCloseDelete}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Job Listing</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+Do you really want to delete this job?
+          </ModalBody>
+          <ModalFooter>
+            <Button bgColor={"red"} onClick={() => {
+              deleteTask()
+              addToast("Deleted a job", {
+                appearance: 'success',
+                autoDismiss: true,
+              })
+
+            }}>Delete</Button>
+            <Button ml={4} onClick={onCloseDelete}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -5,7 +5,9 @@ export default class UsersSVC {
   public static uploadUser = async (username: string, email: string, url: string) => {
     axios.post(`${url}/users`, {
       "username": username,
-      "email": email
+      "email": email,
+      "certifiedToPost":"yes",
+      "role":"User",
     }).then(function (response) {
       console.log(response);
     })
@@ -30,7 +32,7 @@ export default class UsersSVC {
         console.log(error);
       });
   }
-  public static deleteJob = async (id: number, url: string) => {
+  public static deleteJob = async (id: number | undefined, url: string) => {
     axios.delete(`${url}/jobs/${id}`).then(function (response) {
       console.log(response);
     })
