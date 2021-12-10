@@ -53,7 +53,7 @@ export const Users: React.FC<IUserProps> = (props: IUserProps) => {
       alignItems="center"
       justifyContent="center">
       <Flex
-        justifyContent="center" alignItems="center" width={"90vh"}>
+        justifyContent="center" alignItems="center" width={"110vh"}>
         <Flex direction="column" w="inherit" background={props.formBackground} p={3} rounded={6}>
           <Heading mb={6}>
             {"Users"}

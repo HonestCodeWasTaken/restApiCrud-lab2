@@ -6,7 +6,8 @@ import {
     IconButton,
     Divider,
     Avatar,
-    Heading
+    Heading,
+    Link
 } from '@chakra-ui/react'
 import {
     FiMenu,
@@ -72,6 +73,9 @@ export const Sidebar: React.FC<INavBarProps> = (props: INavBarProps) => {
                     <Avatar size="sm" src="avatar-1.jpg" />
                     <Flex flexDir="column" ml={4} display={navSize == "small" ? "none" : "flex"}>
                         <Heading as="h3" size="sm">{props.currentUsername}</Heading>
+                        <Heading  as="h4" size="xm">
+                        <Link href={"/"} >
+                        {"Log off"}</Link></Heading>
                     
                     </Flex>
                 </Flex>
