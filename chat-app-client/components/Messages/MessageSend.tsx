@@ -39,7 +39,7 @@ export const MessageSend: React.FC<IMessageProps> = (props: IMessageProps) => {
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => setUsername(event.target.value)
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)
   const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(event.target.value.toUpperCase())
+    setMessage(event.target.value)
     setLetterCount(event.target.value.length)
   }
 

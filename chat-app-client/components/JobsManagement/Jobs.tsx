@@ -25,7 +25,8 @@ import {
   Button,
   Icon,
   Stack,
-  Input
+  Input,
+  Image
 } from '@chakra-ui/react'
 import { useToasts } from "react-toast-notifications";
 
@@ -46,8 +47,10 @@ interface IJobProps {
 }
 export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
   const [jobs, setJobs] = useState<Array<IJob>>([])
+  const [filteredJobs, setFilteredJobs] = useState<Array<IJob>>([])
   const [title, SetTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [type, setType] = useState("");
   const [howLongItLasts, setHowLongItLasts] = useState("");
   const [selectedJob, setSelectedJob] = useState<IJob>();
@@ -62,11 +65,17 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
     onOpen: onOpenDelete,
     onClose: onCloseDelete,
   } = useDisclosure();
+  const {
+    isOpen: isDescriptionOpen,
+    onOpen: onOpenDescriptionOpen,
+    onClose: onCloseDescriptionOpen,
+  } = useDisclosure();
   const { restApi, users, currentUsername, formBackground, currentUserId, currentUser } = props
   const { addToast } = useToasts();
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => SetTitle(event.target.value)
   const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => setDescription(event.target.value)
+  const handleImageUrl = (event: React.ChangeEvent<HTMLInputElement>) => setImageUrl(event.target.value)
   const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => setType(event.target.value)
   const handleHowLongItLastsChange = (event: React.ChangeEvent<HTMLInputElement>) => setHowLongItLasts(event.target.value)
 
@@ -74,12 +83,17 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
     let jobs: Array<IJob> = await UsersSVC.fetchUrl(`${restApi}/jobs`)
     let urlParams = new URLSearchParams(window.location.search)
     const whoIsSendingID: any = urlParams.get('ID')
+    setFilteredJobs(jobs)
     setJobs(jobs)
   }
   const createNewTask = async () => {
-    await UsersSVC.postJob(title, description, type, howLongItLasts, currentUserId, props.restApi);
+    await UsersSVC.postJob(title, description, type, howLongItLasts, currentUserId, props.restApi, imageUrl);
     await getJobs();
     location.reload()
+  }
+  const incrementCounter = async (counter: number) => {
+    await UsersSVC.putJob(title, description, type, howLongItLasts, currentUserId, props.restApi, counter, imageUrl);
+    await getJobs();
   }
   const deleteTask = async () => {
     await UsersSVC.deleteJob(selectedJob?.id, restApi)
@@ -89,6 +103,9 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
   const getUserByID = (creatorID: number) => {
     let name = users.find(x => x.id === creatorID)?.username
     return name
+  }
+  const sortByCity = (city: string) => {
+    setFilteredJobs(jobs.filter(x => x.city === city))
   }
   useEffect(() => {
     getJobs();
@@ -109,6 +126,12 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
           <Heading mb={6}>
             {"Jobs"}
           </Heading>
+          <span>
+            <Button m={2} maxWidth={"200px"} onClick={() => sortByCity("Kaunas")}>Sort by Kaunas</Button>
+            <Button m={2} maxWidth={"200px"} onClick={() => sortByCity("Vilnius")}>Sort by Vilnius</Button>
+            <Button m={2} maxWidth={"200px"} onClick={() => setFilteredJobs(jobs)}>Show all</Button>
+          </span>
+
           <Divider></Divider>
           <Table size='sm'>
             <Thead>
@@ -123,18 +146,23 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
               </Tr>
             </Thead>
             <Tbody>
-              {jobs.map((item, index) => {
+              {filteredJobs.map((item, index) => {
                 return (
                   <Tr key={index}>
                     <Td>{item.title}</Td>
-                    <Td>{item.description}</Td>
+                    <Td>{<Button disabled={currentUsername === "Guest" ? true : false} onClick={() => {
+                      setSelectedJob(item);
+                      incrementCounter(item.counter !== undefined ? item.counter++ : 0)
+                      onOpenDescriptionOpen()
+                    }}>View more</Button>}</Td>
                     <Td>{item.type}</Td>
                     <Td>{item.howLongItLasts}</Td>
                     <Td>{getUserByID(item.creatorId)}</Td>
                     <Td><Button disabled={currentUsername === "Guest" ? true : false} onClick={onOpen}>Send message</Button></Td>
                     <Td><Button disabled={currentUser?.role !== "Admin" ? true : false} onClick={() => {
-                       setSelectedJob(item);
-                      onOpenDelete();}}>Delete</Button></Td>
+                      setSelectedJob(item);
+                      onOpenDelete();
+                    }}>Delete</Button></Td>
                   </Tr>
                 )
               })}
@@ -174,6 +202,7 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
             <Stack spacing={3}>
               <Input onChange={handleTitleChange} placeholder='title' />
               <Input onChange={handleDescriptionChange} placeholder='description' />
+              <Input onChange={handleImageUrl} placeholder='Image url' />
               <Input onChange={handleTypeChange} placeholder='type' />
               <Input type={"date"} onChange={handleHowLongItLastsChange} placeholder='howLongItLasts' />
             </Stack>
@@ -193,7 +222,7 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      
+
 
 
       <Modal closeOnOverlayClick={true} isOpen={isDelete} onClose={onCloseDelete}>
@@ -202,7 +231,7 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
           <ModalHeader>Job Listing</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-Do you really want to delete this job?
+            Do you really want to delete this job?
           </ModalBody>
           <ModalFooter>
             <Button bgColor={"red"} onClick={() => {
@@ -211,9 +240,24 @@ Do you really want to delete this job?
                 appearance: 'success',
                 autoDismiss: true,
               })
-
             }}>Delete</Button>
             <Button ml={4} onClick={onCloseDelete}>Close</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+
+      <Modal closeOnOverlayClick={true} isOpen={isDescriptionOpen} onClose={onOpenDescriptionOpen}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{selectedJob?.title}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Image maxWidth={"300px"} maxHeight={"300px"} alt="image missing" src={selectedJob?.imageUrl} ></Image>
+            {selectedJob?.description}
+          </ModalBody>
+          <ModalFooter>
+            <Button ml={4} onClick={onCloseDescriptionOpen}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

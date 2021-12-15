@@ -26,7 +26,7 @@ export const MessageItem: React.FC<IMessageProps> = (props: IMessageProps) => {
 					<Heading fontSize="11px" color="#9b9797" style={{ marginTop: "6px" }} ml={2} as="h3" size="xs">{new Date(props.time).toUTCString()}</Heading>
 				</span>
 
-				<Text fontSize="14px" color="#DCDAD9">{props.message} {props.XDDD}</Text>
+				<Text fontSize="14px" color="#DCDAD9">{props.message}</Text>
 				<Text fontSize="14px" color="#DCDAD9">{props.XDDD}</Text>
 				<Text fontSize="14px" color="#DCDAD9">{props.checkbox}</Text>
 			</Flex>

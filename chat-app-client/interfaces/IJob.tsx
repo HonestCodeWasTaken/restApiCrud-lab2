@@ -7,4 +7,7 @@ export interface IJob {
     updated_at: string;
     howLongItLasts: string;
     creatorId: number;
+    imageUrl: string;
+    city: string;
+    counter?: number;
  }

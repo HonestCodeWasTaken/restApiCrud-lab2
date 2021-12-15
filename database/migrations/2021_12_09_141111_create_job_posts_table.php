@@ -18,8 +18,11 @@ class CreateJobPostsTable extends Migration
             $table->timestamps();
             $table->string('title');
             $table->string('description');
+            $table->string('imageUrl');
             $table->string('type');
+            $table->string('city');
             $table->string('howLongItLasts');
+            $table->integer('counter');
             $table->foreignId('creatorId')->references('id')->on('users');
         });
     }

@@ -23,6 +23,8 @@ class JobPostsController extends Controller
             'type' => 'required',
             'howLongItLasts' => 'required',
             'creatorId' => 'required',
+            'imageUrl' => 'required',
+            'city' => 'required'
         ]);
         return jobPost::create(
             [
@@ -30,7 +32,10 @@ class JobPostsController extends Controller
                 'description' => request('description'),
                 'type' => request('type'),
                 'howLongItLasts' => request('howLongItLasts'),
-                'creatorId' => request('creatorId')
+                'creatorId' => request('creatorId'),
+                'imageUrl' => request('imageUrl'),
+                'counter' => request('counter'),
+                'city' => request('city'),
                 ]
         );
     }
@@ -42,7 +47,9 @@ class JobPostsController extends Controller
             'description' => 'required',
             'type' => 'required',
             'howLongItLasts' => 'required',
-            'creatorId' => request('creatorId')
+            'creatorId' => "required",
+            'imageUrl' => 'required',
+            'city' => 'city'
         ]);
 
         $success = $user->update([
@@ -50,7 +57,10 @@ class JobPostsController extends Controller
             'description' => request('description'),
             'type' => request('type'),
             'howLongItLasts' => request('howLongItLasts'),
-            'creatorId' => request('creatorId')
+            'creatorId' => request('creatorId'),
+            'imageUrl' => request('imageUrl'),
+            'counter' => request('counter'),
+            'city' => request('city'),
         ]);
 
         return [

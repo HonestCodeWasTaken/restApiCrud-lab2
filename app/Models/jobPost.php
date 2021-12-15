@@ -15,5 +15,8 @@ class jobPost extends Model
         'type',
         'howLongItLasts',
         'creatorId',
+        'imageUrl',
+        'counter',
+        'city'
     ];
 }

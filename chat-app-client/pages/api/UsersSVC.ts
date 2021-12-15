@@ -18,13 +18,15 @@ export default class UsersSVC {
   public static fetchUrl = async (url: string) => {
     return fetch(url).then(r => r.json())
   }
-  public static postJob = async (title: string, description: string, type: string, howLongItLasts: string, creatorId: number | undefined, url: string) => {
+  public static postJob = async (title: string, description: string, type: string, howLongItLasts: string, creatorId: number | undefined, url: string, imageUrl: string) => {
     axios.post(`${url}/jobs`, {
       "title": title,
       "description": description,
       "type": type,
       "howLongItLasts": howLongItLasts,
-      "creatorId": creatorId
+      "creatorId": creatorId,
+      "counter": 0,
+      "imageUrl": imageUrl
     }).then(function (response) {
       console.log(response);
     })
@@ -46,6 +48,22 @@ export default class UsersSVC {
       "email":user.email,
       "certifiedToPost":"yes",
       "role":user.role
+    }).then(function (response) {
+      console.log(response);
+    })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+  public static putJob = async (title: string, description: string, type: string, howLongItLasts: string, creatorId: number | undefined, url: string, counter: number, imageUrl: string) => {
+    axios.post(`${url}/jobs`, {
+      "title": title,
+      "description": description,
+      "type": type,
+      "howLongItLasts": howLongItLasts,
+      "creatorId": creatorId,
+      "counter": counter,
+      "imageUrl": imageUrl
     }).then(function (response) {
       console.log(response);
     })
