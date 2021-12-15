@@ -26,7 +26,8 @@ import {
   Icon,
   Stack,
   Input,
-  Image
+  Image,
+  Spacer
 } from '@chakra-ui/react'
 import { useToasts } from "react-toast-notifications";
 
@@ -82,17 +83,19 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
   const getJobs = async () => {
     let jobs: Array<IJob> = await UsersSVC.fetchUrl(`${restApi}/jobs`)
     let urlParams = new URLSearchParams(window.location.search)
-    const whoIsSendingID: any = urlParams.get('ID')
     setFilteredJobs(jobs)
     setJobs(jobs)
   }
   const createNewTask = async () => {
+    
     await UsersSVC.postJob(title, description, type, howLongItLasts, currentUserId, props.restApi, imageUrl);
     await getJobs();
     location.reload()
   }
-  const incrementCounter = async (counter: number) => {
-    await UsersSVC.putJob(title, description, type, howLongItLasts, currentUserId, props.restApi, counter, imageUrl);
+  const incrementCounter = async (counter: number, item: IJob) => {
+    const counterPlus = counter + 1;
+    const { title, description, type, howLongItLasts, imageUrl, city, id } = item
+    await UsersSVC.putJob(title, description, type, howLongItLasts, currentUserId, props.restApi, counterPlus, imageUrl, city, id);
     await getJobs();
   }
   const deleteTask = async () => {
@@ -152,7 +155,7 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
                     <Td>{item.title}</Td>
                     <Td>{<Button disabled={currentUsername === "Guest" ? true : false} onClick={() => {
                       setSelectedJob(item);
-                      incrementCounter(item.counter !== undefined ? item.counter++ : 0)
+                      incrementCounter(item.counter !== undefined ? item.counter : 0, item)
                       onOpenDescriptionOpen()
                     }}>View more</Button>}</Td>
                     <Td>{item.type}</Td>
@@ -247,7 +250,7 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
       </Modal>
 
 
-      <Modal closeOnOverlayClick={true} isOpen={isDescriptionOpen} onClose={onOpenDescriptionOpen}>
+      <Modal closeOnOverlayClick={true} isOpen={isDescriptionOpen} onClose={onCloseDescriptionOpen}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{selectedJob?.title}</ModalHeader>
@@ -255,9 +258,11 @@ export const Jobs: React.FC<IJobProps> = (props: IJobProps) => {
           <ModalBody>
             <Image maxWidth={"300px"} maxHeight={"300px"} alt="image missing" src={selectedJob?.imageUrl} ></Image>
             {selectedJob?.description}
+            <Divider mb={3}></Divider>
+            <Text>{selectedJob?.counter === undefined ? 0 : selectedJob?.counter} people clicked on this ad</Text>
           </ModalBody>
           <ModalFooter>
-            <Button ml={4} onClick={onCloseDescriptionOpen}>Close</Button>
+            <Button ml={10} onClick={onCloseDescriptionOpen}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

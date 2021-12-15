@@ -55,15 +55,16 @@ export default class UsersSVC {
         console.log(error);
       });
   }
-  public static putJob = async (title: string, description: string, type: string, howLongItLasts: string, creatorId: number | undefined, url: string, counter: number, imageUrl: string) => {
-    axios.post(`${url}/jobs`, {
+  public static putJob = async (title: string, description: string, type: string, howLongItLasts: string, creatorId: number | undefined, url: string, counter: number, imageUrl: string, city: string, id:number) => {
+    axios.put(`${url}/jobs/${id}`, {
       "title": title,
       "description": description,
       "type": type,
       "howLongItLasts": howLongItLasts,
       "creatorId": creatorId,
       "counter": counter,
-      "imageUrl": imageUrl
+      "imageUrl": imageUrl,
+      "city": city
     }).then(function (response) {
       console.log(response);
     })

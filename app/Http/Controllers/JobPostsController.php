@@ -47,9 +47,9 @@ class JobPostsController extends Controller
             'description' => 'required',
             'type' => 'required',
             'howLongItLasts' => 'required',
-            'creatorId' => "required",
+            'creatorId' => 'required',
             'imageUrl' => 'required',
-            'city' => 'city'
+            'city' => 'required'
         ]);
 
         $success = $user->update([
